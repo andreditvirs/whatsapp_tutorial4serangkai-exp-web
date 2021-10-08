@@ -23,6 +23,18 @@ app.use(express.urlencoded({
 app.use(fileUpload({
   debug: true
 }));
+// AUTHENTICATION
+app.use(async (req, res) => {
+  try {
+    const apiKey = 'tutorial4serangkai';
+    if(Buffer.from(req.headers['authorization'], 'base64').toString() == apiKey){
+      return req.next();
+    }
+    return res.status(403).json({ error: 'No credentials sent/Wrong!' });
+  } catch (e) {
+    return res.status(403).json({ error: 'No credentials sent/Wrong!' });
+  }
+});
 
 const SESSION_FILE_PATH = './whatsapp-session.json';
 let sessionCfg;
